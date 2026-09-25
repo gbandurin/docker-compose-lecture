@@ -50,7 +50,7 @@ services:
     user: "472"
     volumes:
       - /home/user1/prometheus/configs/grafana:/var/lib/grafana
-      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./configs/grafana/provisioning/:/etc/grafana/provisioning
     env_file:
       - path: ./.env # default
         required: true
