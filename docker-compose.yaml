@@ -1,0 +1,82 @@
+x-hosts: &extra_host
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+
+networks:
+  monitoring:
+    driver: bridge
+
+services:
+  prometheus:
+    image: prom/prometheus:v3.4.2
+    container_name: mon.prometheus
+    user: "99"
+    volumes:
+      - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    expose:
+      - "9090"
+    networks:
+      - monitoring
+    <<: *extra_host
+    restart: unless-stopped
+
+  node-exporter:
+    image: prom/node-exporter:v1.10.2
+    container_name: mon.node-exporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($|/)'
+    pid: host
+    expose:
+      - "9100"
+    network_mode: host
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:12.0.2
+    container_name: mon.grafana
+    user: "472"
+    volumes:
+      - /home/user1/prometheus/configs/grafana:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    env_file:
+      - path: ./.env # default
+        required: true
+    ports:
+      - "3000:3000"
+    networks:
+      - monitoring
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15
+    container_name: mon.grafana-postgres
+    restart: unless-stopped
+    env_file:
+      - path: ./.env # default
+        required: true
+    deploy:
+      resources:
+        limits:
+          memory: 2450M
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - monitoring
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-grafana}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
