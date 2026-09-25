@@ -49,7 +49,7 @@ services:
     container_name: mon.grafana
     user: "472"
     volumes:
-      - /home/user1/prometheus/configs/grafana:/var/lib/grafana
+      - ./grafana_data:/var/lib/grafana
       - ./configs/grafana/provisioning/:/etc/grafana/provisioning
     env_file:
       - path: ./.env # default
