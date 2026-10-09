@@ -48,6 +48,7 @@ services:
       - "8080:8080"
 
   zabbix-agent2:
+    container_name: zabbix-agent2
     image: zabbix/zabbix-agent2:latest
     environment:
       - ZBX_HOSTNAME="mattlock"
