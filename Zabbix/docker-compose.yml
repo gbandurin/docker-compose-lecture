@@ -27,6 +27,8 @@ services:
       POSTGRES_USER: zabbix
       POSTGRES_PASSWORD: change_this_password
       POSTGRES_DB: zabbix
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
     ports:
       - "10051:10051"
 
