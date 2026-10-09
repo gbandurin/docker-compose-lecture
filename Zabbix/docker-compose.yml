@@ -54,7 +54,7 @@ services:
     image: zabbix/zabbix-agent2:latest
     environment:
       ZBX_HOSTNAME: zabbix-agent2
-      ZBX_SERVER_HOST: zabbix-server
+      ZBX_SERVER_HOST: 172.18.0.0/16
       ZBX_SERVER_PORT: 10051
     ports:
       - "10050:10050"
