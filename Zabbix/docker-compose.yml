@@ -47,7 +47,6 @@ services:
     ports:
       - "8080:8080"
 
-  services:
   qdrant:
     image: qdrant/qdrant:latest
     container_name: qdrant
