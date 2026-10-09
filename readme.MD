@@ -13,17 +13,28 @@
 - Посмотрим на нюансы настройки;
 - Займемся дебагом того, что не заведется сразу.
 
+### Два проекта:
+* Prometheus + Grafana
+* Zabbix
+
+### Дополнительные файлы
+
+``example_daemon.json`` - файл настройки Docker Daemon.
+Должен распологаться в `/etc/docker/daemon.json`, при изменении нужно перезапустить docker командой: 
+`systemctl restart docker`
+
 ### Текущий состав сервисов:
-* Prometheus
-* Grafana
-* PostgreSQL DB (for Grafana data)
-* Node exporter
+
+| Prometheus + Grafana                                                               | Zabbix + Qdrant                                                                |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| - Prometheus<br>- Grafana<br>- PostgreSQL DB (for Grafana data)<br>- Node exporter | - PostgreSQL DB (for Zabbix data)<br>- Zabbix server<br>- Zabbix front (nginx) |
+
 
 ### Как запустить?
 ```
 # Склонируем себе проект и перейдем в папку:
 git clone https://github.com/gbandurin/docker-compose-lecture.git
-cd docker-compose-lecture
+cd docker-compose-lecture/<project>
 
 # Создадим директории для данных (volume):
 mkdir grafana_data postgres_data prometheus_data
