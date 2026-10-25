@@ -19,6 +19,7 @@ services:
     image: zabbix/zabbix-server-pgsql:alpine-7.4-latest
     container_name: zabbix-server
     restart: unless-stopped
+    user: root # для реальных стендов не используйте - создайте пользователя zabbix и добавьте его в группу docker
     depends_on:
       postgres:
         condition: service_healthy
@@ -29,6 +30,8 @@ services:
       POSTGRES_DB: zabbix
     extra_hosts:
     - "host.docker.internal:host-gateway"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
       - "10051:10051"
 
@@ -56,6 +59,7 @@ services:
       ZBX_HOSTNAME: zabbix-agent2
       ZBX_SERVER_HOST: 172.18.0.1
       ZBX_SERVER_PORT: 10051
+    user: root # для реальных стендов не используйте - создайте пользователя zabbix и добавьте его в группу docker
     ports:
       - "10050:10050"
     volumes:
