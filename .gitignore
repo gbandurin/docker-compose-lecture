@@ -1,1 +1,6 @@
 .env
+Prometheus Grafana/.env
+Zabbix/.venv
+Zabbix/.env
+**/.env
+Zabbix/snapshots/**
