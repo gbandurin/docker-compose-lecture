@@ -75,6 +75,7 @@ services:
       - "6334:6334" # gRPC
     volumes:
       - qdrant_data:/qdrant/storage
+      - ./snapshots:/qdrant/snapshots
     environment:
       QDRANT__LOG_LEVEL: INFO
     deploy:
